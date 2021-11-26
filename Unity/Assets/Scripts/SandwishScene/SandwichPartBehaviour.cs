@@ -8,7 +8,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
     public class SandwichPartBehaviour : BehaviourBase
     {
         public Image PartImage;
-        public Mask PartMask;
+        public Image PartMask;
 
         public SandwichPart SandwichPart { get; set; }
     }
