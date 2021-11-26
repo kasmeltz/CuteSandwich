@@ -35,8 +35,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
                 var part = new SandwichPart
                 {
-                    PartIngredient = PartIngredient.WhiteBread,
-                    PartShape = PartShape.Heart
+                    Ingredient = PartIngredient.WhiteBread,
+                    Shape = PartShape.Heart
                 };
 
                 order
@@ -45,8 +45,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
                 part = new SandwichPart
                 {
-                    PartIngredient = PartIngredient.HamPlain,
-                    PartShape = PartShape.Heart
+                    Ingredient = PartIngredient.HamPlain,
+                    Shape = PartShape.Heart
                 };
 
                 order
@@ -55,8 +55,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
                 part = new SandwichPart
                 {
-                    PartIngredient = PartIngredient.Mozzarella,
-                    PartShape = PartShape.Heart
+                    Ingredient = PartIngredient.Mozzarella,
+                    Shape = PartShape.Heart
                 };
 
                 order
@@ -111,14 +111,29 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                     .Range(0, PartsToCreate.Count);
 
                 var part = Instantiate(SandwichPartPrefab);
+                
+                part.SandwichPart = PartsToCreate[partIndex];
+
                 part
                     .transform
                     .SetParent(transform);
 
                 part.PartMask.rectTransform.anchoredPosition = new Vector2(-800, 0);
-                part.PartImage.maskable = false;
-                part.SandwichPart = PartsToCreate[partIndex];
 
+                var partSprite = Resources
+                    .Load<Sprite>($"Images/Ingredients/{part.SandwichPart.Ingredient}");
+
+                if (partSprite == null)
+                {
+                    Debug.LogError($"CANT FIND IMAGE FOR INGREDIENT {part.SandwichPart.Ingredient}");
+                }
+                else 
+                { 
+                    part.PartImage.sprite = partSprite;
+                }
+
+                part.PartImage.maskable = false;
+                
                 SandwichParts
                     .Add(part);
 
@@ -142,11 +157,29 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                     if (!part.PartImage.maskable)
                     {
                         var maskSprite = Resources
-                            .Load<Sprite>($"Images/Shapes/{part.SandwichPart.PartShape}");
+                            .Load<Sprite>($"Images/Shapes/{part.SandwichPart.Shape}");
 
-                        part.PartMask.sprite = maskSprite;
-                        part.PartImage.maskable = true;
+                        if (maskSprite == null)
+                        {
+                            Debug.LogError($"CANT FIND IMAGE FOR SHAPE {part.SandwichPart.Shape}");
+                        }
+                        else
+                        {
+                            part.PartMask.sprite = maskSprite;
+                            part.PartImage.maskable = true;
+                        }
                     }
+                }
+            }
+
+            var lastPart = SandwichParts
+                .LastOrDefault();
+
+            if (!PartsToCreate.Any())
+            {
+                if (lastPart.PartMask.rectTransform.anchoredPosition.x >= 700)
+                {
+                    Debug.Log("CHECK SANDWICH PARTS!");
                 }
             }
         }
