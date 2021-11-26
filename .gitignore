@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/Unity/Library
+/Unity/Logs
+/Unity/UserSettings
+/Unity/CuteSandwich.sln
