@@ -35,7 +35,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                     .Add(new SandwichPart
                     {
                         Ingredient = ingredient,
-                        ResultShape = 0,
+                        ResultShape = -1,
                         DesiredShape = 0
                     });
             }
