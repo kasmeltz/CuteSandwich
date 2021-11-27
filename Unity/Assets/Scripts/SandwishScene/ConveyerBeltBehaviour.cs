@@ -15,6 +15,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         public float PartCreatePoint = -200;
         public Image ShapeImage;
         public int MaxShapeIndex = 4;
+        public int OrdersToCreate = 1;
 
         public SandwichOrderPanelBehaviour OrderPanelPrefab;
 
@@ -39,9 +40,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
         public void MakeOrders()
         {
-            int orderCount = 2;
-
-            for(int i = 0;i < orderCount;i++)
+            for(int i = 0;i < OrdersToCreate; i++)
             {
                 var orderPanel = Instantiate(OrderPanelPrefab);
 
