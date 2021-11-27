@@ -6,16 +6,37 @@
 
         public SandwichPart()
         {
-            ResultShape = -1;
+            Shape = -1;
+            Sauce = PartSauce.None;
+        }
+
+        public SandwichPart(PartIngredient ingredient)
+        {
+            Ingredient = ingredient;
+            Shape = -1;
+            Sauce = PartSauce.None;
+        }
+
+        public SandwichPart(PartIngredient ingredient, int shape)
+        {
+            Ingredient = ingredient;
+            Shape = shape;
+            Sauce = PartSauce.None;
+        }
+
+
+        public SandwichPart(PartIngredient ingredient, PartSauce sauce)
+        {
+            Ingredient = ingredient;
+            Shape = -1;
+            Sauce = sauce;
         }
 
         #endregion
 
         #region Members
 
-        public int DesiredShape { get; set; }
-
-        public int ResultShape { get; set; }
+        public int Shape { get; set; }
 
         public PartIngredient Ingredient { get; set; }
 

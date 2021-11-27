@@ -719,6 +719,7 @@ MonoBehaviour:
   PartMoveSpeedPerLevel: 10
   ShapeImage: {fileID: 1339527360}
   IngredientImage: {fileID: 1290505308}
+  SauceImage: {fileID: 752006910}
   OrdersToCreate: 1
   OrderPanelPrefab: {fileID: 7646143558884254423, guid: 1b3aa96c835355d44b601c505ac38476, type: 3}
   SandwichPartPrefab: {fileID: 5342704471523791139, guid: 9e85a5fefeee3b54bbce1fd630858745, type: 3}

@@ -13,34 +13,10 @@
             {
                 Parts = new List<SandwichPart>
                 {
-                    new SandwichPart
-                    {
-                        Ingredient = PartIngredient.WheatBread,
-                        DesiredShape = -1,
-                        ResultShape= -1,
-                        Sauce = PartSauce.None
-                    },
-                    new SandwichPart
-                    {
-                        Ingredient = PartIngredient.Ham,
-                        DesiredShape = -1,
-                        ResultShape= -1,
-                        Sauce = PartSauce.None
-                    },
-                    new SandwichPart
-                    {
-                        Ingredient = PartIngredient.SwissCheese,
-                        DesiredShape = -1,
-                        ResultShape= -1,
-                        Sauce = PartSauce.None
-                    },
-                    new SandwichPart
-                    {
-                        Ingredient = PartIngredient.WhiteBread,
-                        DesiredShape = -1,
-                        ResultShape= -1,
-                        Sauce = PartSauce.None
-                    }
+                    new SandwichPart(PartIngredient.WheatBread),
+                    new SandwichPart(PartIngredient.Ham),
+                    new SandwichPart(PartIngredient.SwissCheese),
+                    new SandwichPart(PartIngredient.WhiteBread)                    
                 }
             }
 
@@ -67,11 +43,15 @@
                         isInvalidIngredient = true;
                         break;
                     }
-                    if (!saucesAllowed
-                        .Contains(part.Sauce))
+
+                    if (part.Sauce != PartSauce.None)
                     {
-                        isInvalidIngredient = true;
-                        break;
+                        if (!saucesAllowed
+                            .Contains(part.Sauce))
+                        {
+                            isInvalidIngredient = true;
+                            break;
+                        }
                     }
                 }
 

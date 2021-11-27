@@ -93,7 +93,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
                 foreach(var part in order.Parts)
                 {
-                    part.DesiredShape = Random.Range(0, MaxShapeIndex);
+                    part.Shape = Random.Range(0, MaxShapeIndex);
                 }
 
                 orderPanel
@@ -165,26 +165,25 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             SelectedSaucedIndex += direction;
             if (SelectedSaucedIndex < 0)
             {
-                SelectedSaucedIndex = IngredientsAllowed.Count - 1;
+                SelectedSaucedIndex = SaucesAllowed.Count - 1;
             }
-            else if (SelectedSaucedIndex >= IngredientsAllowed.Count)
+            else if (SelectedSaucedIndex >= SaucesAllowed.Count)
             {
                 SelectedSaucedIndex = 0;
             }
 
-            SetSelectedIngredient(SelectedIngredientIndex);
+            SetSelectedSauce(SelectedSaucedIndex);
         }
 
         public void SetSelectedSauce(int sauceIndex)
         {
-            SelectedIngredientIndex = ingredientIndex;
+            SelectedSaucedIndex = sauceIndex;
 
-            var ingredient = IngredientsAllowed[SelectedIngredientIndex];
+            var sauce = SaucesAllowed[SelectedSaucedIndex];
 
-            IngredientImage.sprite = Resources
-                .Load<Sprite>($"Images/Ingredients/{ingredient}");
+            SauceImage.sprite = Resources
+                .Load<Sprite>($"Images/Sauces/{sauce}_bottle");
         }
-
 
         public void MakePart()
         {
@@ -207,12 +206,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
             var ingredient = IngredientsAllowed[SelectedIngredientIndex];
 
-            var sandwichPart = new SandwichPart
-            {
-                Ingredient = ingredient,
-                ResultShape = -1,
-                DesiredShape = -1
-            };
+            var sandwichPart = new SandwichPart(ingredient);
 
             part
                 .SetSandwichPart(sandwichPart, true);
@@ -282,10 +276,10 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 {
                     part.RectTransform.anchoredPosition += moveDirection;
 
-                    if (part.SandwichPart.ResultShape < 0 && 
+                    if (part.SandwichPart.Shape < 0 && 
                         part.RectTransform.anchoredPosition.x >= 0)
                     {
-                        part.SandwichPart.ResultShape = SelectedShapeIndex;
+                        part.SandwichPart.Shape = SelectedShapeIndex;
 
                         part
                             .SetShape(SelectedShapeIndex);
@@ -325,8 +319,9 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 foreach (var part in order.Parts)
                 {
                     var availablePart = AvailableParts.FirstOrDefault(o =>
+                        o.SandwichPart.Sauce == part.Sauce &&
                         o.SandwichPart.Ingredient == part.Ingredient &&
-                        o.SandwichPart.ResultShape == part.DesiredShape);
+                        o.SandwichPart.Shape == part.Shape);
 
                     if (availablePart != null)
                     {
@@ -498,7 +493,6 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 PartIngredient.WhiteBread
             };
 
-
             SaucesAllowed = new List<PartSauce>
             {
                 PartSauce.Butter
@@ -562,6 +556,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             SandwichParts = new List<SandwichPartBehaviour>();
 
             SetSelectedShape(0);
+            SetSelectedSauce(0);
+            SetSelectedIngredient(0);
 
             MakeOrders();
         }

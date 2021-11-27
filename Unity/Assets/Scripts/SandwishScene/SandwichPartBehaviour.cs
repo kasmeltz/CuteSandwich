@@ -11,6 +11,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
         public RectTransform RectTransform;
         public Image Ingredient;
+        public Image Sauce;
         public Image Mask;
         public Image Outline;
 
@@ -25,13 +26,30 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             SandwichPart = sandwichPart;
 
             SetIngredient(sandwichPart.Ingredient);
-            if (useResult)
+            SetSauce(sandwichPart.Sauce);
+            SetShape(sandwichPart.Shape);
+        }
+
+        public void SetSauce(PartSauce sauce)
+        {
+            if (sauce == PartSauce.None)
             {
-                SetShape(sandwichPart.ResultShape);
+                Sauce.gameObject.SetActive(false);
+                return;
+            }
+
+            Sauce.gameObject.SetActive(true);
+
+            var sprite = Resources
+                   .Load<Sprite>($"Images/Sauce/{sauce}");
+
+            if (sprite == null)
+            {
+                Debug.LogError($"CANT FIND IMAGE FOR SAUCE {sauce}");
             }
             else
             {
-                SetShape(sandwichPart.DesiredShape);
+                Sauce.sprite = sprite;
             }
         }
 
