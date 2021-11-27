@@ -3,9 +3,10 @@
     public enum PartIngredient
     {
         WhiteBread,
-        Mozzarella,
-        HamPlain,
+        SwissCheese,
+        Ham,
         Tomato,
-        Lettuce
+        Lettuce,
+        Bacon
     }
 }

@@ -108,7 +108,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 600
+        y: 1300
         width: 200
         height: 200
       alignment: 0
@@ -129,7 +129,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 200
-        y: 600
+        y: 1300
         width: 200
         height: 200
       alignment: 0
@@ -150,7 +150,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 400
-        y: 600
+        y: 1300
         width: 200
         height: 200
       alignment: 0
@@ -171,7 +171,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 600
-        y: 600
+        y: 1300
         width: 200
         height: 200
       alignment: 0
@@ -191,8 +191,8 @@ TextureImporter:
       name: all_shapes_4
       rect:
         serializedVersion: 2
-        x: 0
-        y: 400
+        x: 800
+        y: 1300
         width: 200
         height: 200
       alignment: 0
@@ -212,8 +212,8 @@ TextureImporter:
       name: all_shapes_5
       rect:
         serializedVersion: 2
-        x: 200
-        y: 400
+        x: 0
+        y: 1100
         width: 200
         height: 200
       alignment: 0
@@ -233,8 +233,8 @@ TextureImporter:
       name: all_shapes_6
       rect:
         serializedVersion: 2
-        x: 400
-        y: 400
+        x: 200
+        y: 1100
         width: 200
         height: 200
       alignment: 0
@@ -254,8 +254,8 @@ TextureImporter:
       name: all_shapes_7
       rect:
         serializedVersion: 2
-        x: 600
-        y: 400
+        x: 400
+        y: 1100
         width: 200
         height: 200
       alignment: 0
@@ -275,8 +275,8 @@ TextureImporter:
       name: all_shapes_8
       rect:
         serializedVersion: 2
-        x: 0
-        y: 200
+        x: 600
+        y: 1100
         width: 200
         height: 200
       alignment: 0
@@ -296,8 +296,8 @@ TextureImporter:
       name: all_shapes_9
       rect:
         serializedVersion: 2
-        x: 200
-        y: 200
+        x: 800
+        y: 1100
         width: 200
         height: 200
       alignment: 0
@@ -317,8 +317,8 @@ TextureImporter:
       name: all_shapes_10
       rect:
         serializedVersion: 2
-        x: 400
-        y: 200
+        x: 0
+        y: 900
         width: 200
         height: 200
       alignment: 0
@@ -338,8 +338,8 @@ TextureImporter:
       name: all_shapes_11
       rect:
         serializedVersion: 2
-        x: 600
-        y: 200
+        x: 200
+        y: 900
         width: 200
         height: 200
       alignment: 0
@@ -359,8 +359,8 @@ TextureImporter:
       name: all_shapes_12
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
+        x: 400
+        y: 900
         width: 200
         height: 200
       alignment: 0
@@ -372,6 +372,27 @@ TextureImporter:
       bones: []
       spriteID: c355a89dacccc934bb6d58cfd4ea502f
       internalID: 946239996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: all_shapes_13
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 900
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d614e804b9d66124286adc4b0689df50
+      internalID: 920304296
       vertices: []
       indices: 
       edges: []
@@ -388,6 +409,7 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       all_shapes_11: 1932552490
+      all_shapes_13: 920304296
       all_shapes_8: -1293882832
       all_shapes_4: -11152922
       all_shapes_7: -1219202851

@@ -618,7 +618,7 @@ MonoBehaviour:
   MaxShapeIndex: 4
   OrdersToCreate: 1
   OrderPanelPrefab: {fileID: 7646143558884254423, guid: 1b3aa96c835355d44b601c505ac38476, type: 3}
-  SandwichPartPrefab: {fileID: 1862711677873008475, guid: 9e85a5fefeee3b54bbce1fd630858745, type: 3}
+  SandwichPartPrefab: {fileID: 5342704471523791139, guid: 9e85a5fefeee3b54bbce1fd630858745, type: 3}
   OrderContainer: {fileID: 652676210}
   CreatedParts: {fileID: 1308136426}
 --- !u!114 &1188810866
@@ -818,7 +818,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1076026552, guid: c2fc919c811c7c547b3991354b9b158d, type: 3}
+  m_Sprite: {fileID: -1565769824, guid: e1592306197ca6b478ae9a64a4017ff9, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

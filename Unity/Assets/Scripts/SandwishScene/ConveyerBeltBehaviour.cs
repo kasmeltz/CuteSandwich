@@ -101,7 +101,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             SelectedShapeIndex = shapeIndex;
 
             var sprites = Resources
-                .LoadAll<Sprite>("Images/Shapes/all_shapes");
+                .LoadAll<Sprite>("Images/Shapes/all_shapes_outline");
 
             ShapeImage.sprite = sprites[shapeIndex];
         }
@@ -128,7 +128,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             }
             else
             {
-                if (lastPart.PartMask.rectTransform.anchoredPosition.x >= PartCreatePoint)
+                if (lastPart.RectTransform.anchoredPosition.x >= PartCreatePoint)
                 {
                     createPart = true;
                 }
@@ -145,12 +145,12 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                     .transform
                     .SetParent(transform);
 
-                part.PartMask.rectTransform.anchoredPosition = new Vector2(-800, 0);
+                part.RectTransform.anchoredPosition = new Vector2(-800, 0);
 
                 part
                     .SetSandwichPart(PartsToCreate[partIndex], true);
 
-                part.PartImage.maskable = false;
+                part.Mask.maskable = false;
                 
                 SandwichParts
                     .Add(part);
@@ -170,10 +170,10 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             {
                 if (part.transform.parent != CreatedParts)
                 {
-                    part.PartMask.rectTransform.anchoredPosition += moveDirection;
+                    part.RectTransform.anchoredPosition += moveDirection;
 
                     if (part.SandwichPart.ResultShape < 0 && 
-                        part.PartMask.rectTransform.anchoredPosition.x >= 0)
+                        part.RectTransform.anchoredPosition.x >= 0)
                     {
                         part.SandwichPart.ResultShape = SelectedShapeIndex;
 
@@ -181,9 +181,9 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                             .SetShape(SelectedShapeIndex);
                     }
 
-                    if (part.PartMask.rectTransform.anchoredPosition.x >= 700)
+                    if (part.RectTransform.anchoredPosition.x >= 700)
                     {
-                        part.PartMask.rectTransform.anchoredPosition = new Vector2(0, 0);
+                        part.RectTransform.anchoredPosition = new Vector2(0, 0);
                         part
                             .transform
                             .SetParent(CreatedParts);
@@ -284,14 +284,14 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             PartsToCreate
                 .Clear();
             
-            foreach(GameObject item in OrderContainer.transform)
+            foreach(Transform item in OrderContainer)
             {
-                MegaDestroy(item);
+                MegaDestroy(item.gameObject);
             }
 
-            foreach (GameObject item in CreatedParts.transform)
+            foreach (Transform item in CreatedParts)
             {
-                MegaDestroy(item);
+                MegaDestroy(item.gameObject);
             }
         }
 
@@ -374,7 +374,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
             IngredientsAllowed = new HashSet<PartIngredient>
             {
-                PartIngredient.WhiteBread, PartIngredient.HamPlain, PartIngredient.Mozzarella
+                PartIngredient.WhiteBread, PartIngredient.Ham, PartIngredient.SwissCheese
             };
 
             PartsToCreate = new List<SandwichPart>();

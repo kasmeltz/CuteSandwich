@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-
-namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
+﻿namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 {
+    using System.Collections.Generic;
+    using UnityEngine;
+
     public class SandwichRecipe
     {
         #region Recipes
 
         public static Dictionary<string, SandwichOrder> Recipes = new Dictionary<string, SandwichOrder>
         {
-            ["HamAndMozzarella"] = new SandwichOrder(PartIngredient.WhiteBread, PartIngredient.HamPlain, PartIngredient.Mozzarella, PartIngredient.WhiteBread)           
+            ["Ham And Swiss"] = new SandwichOrder(PartIngredient.WhiteBread, PartIngredient.Ham, PartIngredient.SwissCheese, PartIngredient.WhiteBread)           
         };
 
         #endregion

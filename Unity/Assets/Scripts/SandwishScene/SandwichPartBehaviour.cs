@@ -9,8 +9,10 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
     {
         #region Members
 
-        public Image PartImage;
-        public Image PartMask;
+        public RectTransform RectTransform;
+        public Image Ingredient;
+        public Image Mask;
+        public Image Outline;
 
         public SandwichPart SandwichPart { get; set; }
 
@@ -44,7 +46,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             }
             else
             {
-                PartImage.sprite = partSprite;
+                Ingredient.sprite = partSprite;
             }
         }
 
@@ -52,15 +54,28 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         {
             if (shapeIndex < 0)
             {
-                PartImage.maskable = false;
+                Ingredient.maskable = false;
+
+                Outline
+                    .gameObject
+                    .SetActive(false);
             }
             else
             {
                 var sprites = Resources
                     .LoadAll<Sprite>("Images/Shapes/all_shapes");
 
-                PartMask.sprite = sprites[shapeIndex];
-                PartImage.maskable = true;
+                Mask.sprite = sprites[shapeIndex];
+                Ingredient.maskable = true;
+
+                Outline
+                    .gameObject
+                    .SetActive(true);
+
+                sprites = Resources
+                   .LoadAll<Sprite>("Images/Shapes/all_shapes_outline");
+
+                Outline.sprite = sprites[shapeIndex];
             }
         }
 

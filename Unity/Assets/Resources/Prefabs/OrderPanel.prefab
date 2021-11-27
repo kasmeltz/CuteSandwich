@@ -349,4 +349,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IngredientPanel: {fileID: 2633337902456997753}
   FaceImage: {fileID: 4951512390145098089}
-  SandwichPartPrefab: {fileID: 1862711677873008475, guid: 9e85a5fefeee3b54bbce1fd630858745, type: 3}
+  SandwichPartPrefab: {fileID: 5342704471523791139, guid: 9e85a5fefeee3b54bbce1fd630858745, type: 3}
