@@ -16,7 +16,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         public Image ShapeImage;
 
         public SandwichPartBehaviour SandwichPartPrefab;
-
+        
+        public RectTransform OrderContainer;
         public RectTransform CreatedParts;
 
         protected PartShape SelectedShape { get; set; }
@@ -24,6 +25,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         public List<SandwichPart> PartsToCreate { get; set; }
 
         public List<SandwichOrder> SandwichOrders { get; set; }
+
+        public List<SandwichPartBehaviour> RequestedParts { get; set; }
 
         public List<SandwichPartBehaviour> SandwichParts { get; set; }
 
@@ -39,49 +42,10 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             {
                 var order = new SandwichOrder();
 
-                var part = new SandwichPart
-                {
-                    Ingredient = PartIngredient.WhiteBread,
-                    DesiredShape = PartShape.Heart,
-                    ResultShape = PartShape.None
-                };
-
-                order
-                    .Parts
-                    .Add(part);
-
-                part = new SandwichPart
-                {
-                    Ingredient = PartIngredient.HamPlain,
-                    DesiredShape = PartShape.Heart,
-                    ResultShape = PartShape.None
-                };
-
-                order
-                    .Parts
-                    .Add(part);
-
-                part = new SandwichPart
-                {
-                    Ingredient = PartIngredient.Mozzarella,
-                    DesiredShape = PartShape.Heart,
-                    ResultShape = PartShape.None
-                };
-
-                order
-                    .Parts
-                    .Add(part);
-
-                part = new SandwichPart
-                {
-                    Ingredient = PartIngredient.WhiteBread,
-                    DesiredShape = PartShape.Heart,
-                    ResultShape = PartShape.None
-                };
-
-                order
-                    .Parts
-                    .Add(part);
+                CreateOrderPart(order, PartIngredient.WhiteBread, PartShape.Heart);
+                CreateOrderPart(order, PartIngredient.Mozzarella, PartShape.Heart);
+                CreateOrderPart(order, PartIngredient.HamPlain, PartShape.Heart);
+                CreateOrderPart(order, PartIngredient.WhiteBread, PartShape.Heart);
 
                 SandwichOrders
                     .Add(order);
@@ -124,6 +88,28 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
         #region Protected Methods
 
+        protected void CreateOrderPart(SandwichOrder order, PartIngredient ingredient, PartShape shape)
+        {
+            var sandwichPart = new SandwichPart
+            {
+                Ingredient = ingredient,
+                DesiredShape = shape,
+                ResultShape = PartShape.None
+            };
+
+            var sandwichPartBehaviour = Instantiate(SandwichPartPrefab);
+            sandwichPartBehaviour
+                .SetSandwichPart(sandwichPart, false);
+
+            sandwichPartBehaviour
+                .transform
+                .SetParent(OrderContainer);
+
+            order
+                .Parts
+                .Add(sandwichPart);
+        }
+
         protected void MakeNewParts()
         {
             if (!PartsToCreate.Any())
@@ -155,25 +141,14 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
                 var part = Instantiate(SandwichPartPrefab);
                 
-                part.SandwichPart = PartsToCreate[partIndex];
-
                 part
                     .transform
                     .SetParent(transform);
 
                 part.PartMask.rectTransform.anchoredPosition = new Vector2(-800, 0);
 
-                var partSprite = Resources
-                    .Load<Sprite>($"Images/Ingredients/{part.SandwichPart.Ingredient}");
-
-                if (partSprite == null)
-                {
-                    Debug.LogError($"CANT FIND IMAGE FOR INGREDIENT {part.SandwichPart.Ingredient}");
-                }
-                else 
-                { 
-                    part.PartImage.sprite = partSprite;
-                }
+                part
+                    .SetSandwichPart(PartsToCreate[partIndex], true);
 
                 part.PartImage.maskable = false;
                 
@@ -201,19 +176,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                     {
                         if (!part.PartImage.maskable)
                         {
-                            var maskSprite = Resources
-                                .Load<Sprite>($"Images/Shapes/{SelectedShape}");
-
-                            if (maskSprite == null)
-                            {
-                                Debug.LogError($"CANT FIND IMAGE FOR SHAPE {SelectedShape}");
-                            }
-                            else
-                            {
-                                part.SandwichPart.ResultShape = SelectedShape;
-                                part.PartMask.sprite = maskSprite;
-                                part.PartImage.maskable = true;
-                            }
+                            part
+                                .SetShape(SelectedShape);
                         }
                     }
 
@@ -262,9 +226,10 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         {
             base
                 .Awake();
-
+            
             PartsToCreate = new List<SandwichPart>();
             SandwichOrders = new List<SandwichOrder>();
+            RequestedParts = new List<SandwichPartBehaviour>();
             SandwichParts = new List<SandwichPartBehaviour>();
 
             SetSelectedShape(PartShape.Heart);
