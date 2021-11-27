@@ -13,13 +13,11 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         #region Members
 
         public TMP_Text ScoreText;
-        public float PartMoveSpeed = 100;
+        public float BasePartMoveSpeed = 100;
         public float PartCreatePoint = -100;
-        public Image ShapeImage;
-        public int MaxShapeIndex = 4;
-        public int OrdersToCreate = 1;
-        protected float Score;
-        protected float ScoreToAdd;
+        public float PartMoveSpeedPerLevel = 10;        
+        public Image ShapeImage;        
+        public int OrdersToCreate = 1;             
 
         public SandwichOrderPanelBehaviour OrderPanelPrefab;
 
@@ -36,11 +34,26 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
         public List<SandwichPartBehaviour> RequestedParts { get; set; }
 
-        public List<SandwichPartBehaviour> SandwichParts { get; set; }
-
-        public HashSet<PartIngredient> IngredientsAllowed { get; set; } 
+        public List<SandwichPartBehaviour> SandwichParts { get; set; }        
 
         public SandwichSceneState SandwichSceneState { get; set; }
+
+        protected int TotalPossibleShapes { get; set; }
+        
+        public Queue<PartIngredient> IngredientsToAdd { get; set; }
+
+        public HashSet<PartIngredient> IngredientsAllowed { get; set; }
+
+        public float Score { get; set; }
+
+        public float ScoreToAdd { get; set; }
+
+        public int MaxShapeIndex { get; set; }
+
+        public int Level { get; set; }
+
+        public float PartMoveSpeed { get; set; }
+
 
         #endregion
 
@@ -102,6 +115,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
             var sprites = Resources
                 .LoadAll<Sprite>("Images/Shapes/all_shapes_outline");
+
+            TotalPossibleShapes = sprites.Length;
 
             ShapeImage.sprite = sprites[shapeIndex];
         }
@@ -222,7 +237,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                     if (availablePart != null)
                     {
                         partsFound++;
-                        ScoreToAdd += 10;
+                        ScoreToAdd += 10 * (Level + 1);
                         availableParts
                             .Remove(availablePart);
                     }
@@ -231,7 +246,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 if (partsFound == order.Parts.Count)
                 {
                     sandwichesCompleted++;
-                    ScoreToAdd += 50;
+                    ScoreToAdd += 50 * (Level + 1);
                 }
             }
 
@@ -245,9 +260,40 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             }
         }
 
+        protected void SetScore(float score)
+        {
+            Score = score;
+            ScoreText.text = $"{Mathf.RoundToInt(Score)}";
+        }
+
+        protected void SetLevel(int level)
+        {
+            Level = level;
+            if (TotalPossibleShapes == 0 ||
+                MaxShapeIndex < TotalPossibleShapes)
+            {
+                MaxShapeIndex = (Level / 2) + 4;
+            }
+
+            PartMoveSpeed = BasePartMoveSpeed + (PartMoveSpeedPerLevel * Level);
+        }
+
         protected void NextLevel()
         {
             Reset();
+            SetLevel(Level + 1);
+            Level++;
+
+            if (IngredientsToAdd
+                .Any())
+            {
+                var ingredient = IngredientsToAdd
+                    .Dequeue();
+
+                IngredientsAllowed
+                    .Add(ingredient);
+            }
+
             SetSelectedShape(0);
             MakeOrders();
 
@@ -308,16 +354,14 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         {
             if (ScoreToAdd > 0)
             {
-                var amount = Time.deltaTime * 20;
+                var amount = Time.deltaTime * 20 * (Level + 1);
                 if (amount > ScoreToAdd)
                 {
                     amount = ScoreToAdd;
                 }
 
                 ScoreToAdd -= amount;
-                Score += amount;
-
-                ScoreText.text = $"{Mathf.RoundToInt(Score)}";
+                SetScore(Score + amount);
 
                 if (ScoreToAdd <= 0)
                 {
@@ -364,12 +408,19 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
             SandwichSceneState = SandwichSceneState.MakingSandwiches;
 
-            Score = 0;
+            SetLevel(0);
+            SetScore(0);
 
             IngredientsAllowed = new HashSet<PartIngredient>
             {
                 PartIngredient.WhiteBread, PartIngredient.Ham, PartIngredient.SwissCheese
             };
+
+            IngredientsToAdd = new Queue<PartIngredient>();
+
+            IngredientsToAdd.Enqueue(PartIngredient.Bacon);
+            IngredientsToAdd.Enqueue(PartIngredient.Tomato);
+            IngredientsToAdd.Enqueue(PartIngredient.Lettuce);
 
             PartsToCreate = new Queue<SandwichPart>();
             SandwichOrders = new List<SandwichOrder>();
