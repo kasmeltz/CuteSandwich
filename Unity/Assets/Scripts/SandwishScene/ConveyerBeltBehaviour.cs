@@ -49,6 +49,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
         public List<PartIngredient> IngredientsAllowed { get; set; }
 
+        public List<PartIngredient> BreadTypesAvailable { get; set; }
+
         public float OrderTime { get; set; }
 
         public float Score { get; set; }
@@ -73,6 +75,14 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
                 var order = SandwichRecipe
                     .GetRandomOrder(IngredientsAllowed);
+
+                var breadIndex = Random
+                    .Range(0, BreadTypesAvailable.Count);
+
+                var breadType = BreadTypesAvailable[breadIndex];
+
+                SandwichRecipe
+                    .SetBreadType(order, breadType);
 
                 foreach(var part in order.Parts)
                 {
@@ -149,7 +159,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                .LastOrDefault();
 
             if (lastPart != null &&
-                lastPart.RectTransform.anchoredPosition.x <= -700)
+                lastPart.RectTransform.anchoredPosition.x <= -600)
             {
                 return;
             }
@@ -179,18 +189,31 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             SandwichParts
                 .Add(part);
 
-            SetScore(Score - 1);
-
-            if (Score < 0)
-            {
-                GameOver();
-            }
+            SetScore(Score - 0.25f);            
         }
 
         public void SetScore(float score)
         {
             Score = score;
             ScoreText.text = $"{Score:c}";
+
+            if (Score < 0)
+            {
+                Score = 0;
+                GameOver();
+            }
+        }
+
+        public void SetOrderTime(float time)
+        {
+            OrderTime = time;
+            OrderTimeText.text = $"{OrderTime:0.0}";
+
+            if (OrderTime < 0)
+            {
+                OrderTime = 0;
+                GameOver();
+            }
         }
 
         public void SetLevel(int level)
@@ -204,10 +227,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
             PartMoveSpeed = BasePartMoveSpeed + (PartMoveSpeedPerLevel * Level);
 
-            OrderTime = 90;
-            OrderTimeText.text = $"{OrderTime:0.0}";
+            SetOrderTime(90);            
         }
-
 
         #endregion
 
@@ -292,6 +313,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             {
                 ScoreToAdd += 0.25f * SandwichOrders.Sum(o => o.Parts.Count);
                 ScoreToAdd += 4;
+                ScoreToAdd += OrderTime / 25f;
                 SandwichSceneState = SandwichSceneState.CalculatingScore;
             }
         }
@@ -309,6 +331,12 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
                 IngredientsAllowed
                     .Add(ingredient);
+
+                if (ingredient.ToString().Contains("Bread"))
+                {
+                    BreadTypesAvailable
+                        .Add(ingredient);
+                }
             }
 
             SetSelectedShape(0);
@@ -351,13 +379,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
         protected void UpdateMakingSandwiches()
         {
-            OrderTime -= Time.deltaTime;
-
-            OrderTimeText.text = $"{OrderTime:0.0}";
-            if (OrderTime <= 0)
-            {
-                GameOver();             
-            }
+            SetOrderTime(OrderTime - Time.deltaTime);
 
             MoveConveyer();
 
@@ -391,7 +413,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         {
             if (ScoreToAdd > 0)
             {
-                var amount = Time.deltaTime * 20 * (Level + 1);
+                var amount = Time.deltaTime * 20;
                 if (amount > ScoreToAdd)
                 {
                     amount = ScoreToAdd;
@@ -399,6 +421,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
                 ScoreToAdd -= amount;
                 SetScore(Score + amount);
+
+                SetOrderTime(OrderTime - (Time.deltaTime * 45));
 
                 if (ScoreToAdd <= 0)
                 {
@@ -413,6 +437,64 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         protected void UpdateGameOver()
         {
 
+        }
+
+        protected void StartNewGame()
+        {
+            SelectedIngredientIndex = 0;
+
+            SandwichSceneState = SandwichSceneState.MakingSandwiches;
+
+            SetLevel(0);
+            SetScore(5);
+
+            BreadTypesAvailable = new List<PartIngredient>
+            {
+                PartIngredient.WhiteBread
+            };
+
+            IngredientsAllowed = new List<PartIngredient>
+            {
+                PartIngredient.WhiteBread, PartIngredient.Ham, PartIngredient.SwissCheese
+            };
+
+            IngredientsToAdd = new Queue<PartIngredient>();
+
+            IngredientsToAdd
+                .Enqueue(PartIngredient.WheatBread);
+
+            IngredientsToAdd
+                .Enqueue(PartIngredient.Tomato);
+
+            IngredientsToAdd
+                .Enqueue(PartIngredient.Lettuce);
+
+            IngredientsToAdd
+                .Enqueue(PartIngredient.Bacon);
+
+            IngredientsToAdd
+                .Enqueue(PartIngredient.SesameBread);
+
+            IngredientsToAdd
+                .Enqueue(PartIngredient.Cheddar);
+
+            IngredientsToAdd
+                .Enqueue(PartIngredient.Chicken);
+
+            IngredientsToAdd
+                .Enqueue(PartIngredient.ItalianBread);
+
+            IngredientsToAdd
+                .Enqueue(PartIngredient.Provolone);
+
+            AvailableParts = new List<SandwichPartBehaviour>();
+            SandwichOrders = new List<SandwichOrder>();
+            RequestedParts = new List<SandwichPartBehaviour>();
+            SandwichParts = new List<SandwichPartBehaviour>();
+
+            SetSelectedShape(0);
+
+            MakeOrders();
         }
 
         #endregion
@@ -442,35 +524,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         {
             base
                 .Awake();
-            
-            SelectedIngredientIndex = 0;
 
-            SandwichSceneState = SandwichSceneState.MakingSandwiches;
-
-            SetLevel(0);
-            SetScore(10);
-
-            IngredientsAllowed = new List<PartIngredient>
-            {
-                PartIngredient.WhiteBread, PartIngredient.Ham, PartIngredient.SwissCheese, PartIngredient.Bacon
-            };
-
-            IngredientsToAdd = new Queue<PartIngredient>();
-
-            IngredientsToAdd
-                .Enqueue(PartIngredient.Tomato);
-
-            IngredientsToAdd
-                .Enqueue(PartIngredient.Lettuce);
-
-            AvailableParts = new List<SandwichPartBehaviour>();
-            SandwichOrders = new List<SandwichOrder>();
-            RequestedParts = new List<SandwichPartBehaviour>();
-            SandwichParts = new List<SandwichPartBehaviour>();
-
-            SetSelectedShape(0);
-
-            MakeOrders();
+            StartNewGame();
         }
 
         #endregion

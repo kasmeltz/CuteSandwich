@@ -7,6 +7,12 @@
         Ham,
         Tomato,
         Lettuce,
-        Bacon
+        Bacon,
+        Cheddar,
+        Chicken,
+        ItalianBread,
+        Provolone,
+        SesameBread,
+        WheatBread
     }
 }
