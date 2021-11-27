@@ -1,6 +1,7 @@
 namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     public class SandwichOrder
     {
@@ -30,6 +31,21 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         #region Members
 
         public List<SandwichPart> Parts { get; set; }
+
+        public float Score 
+        { 
+            get
+            {
+                float score = 0;
+
+                score += Parts.Count * 0.4f;
+                score += Parts.Count(o => o.Sauce != PartSauce.None) * 0.4f;
+                score += 4;
+
+                return score;
+
+            }
+        }
 
         #endregion
     }

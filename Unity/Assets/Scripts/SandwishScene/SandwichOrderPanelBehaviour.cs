@@ -27,7 +27,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             {
                 var sandwichPartBehaviour = Instantiate(SandwichPartPrefab);
                 sandwichPartBehaviour
-                    .SetSandwichPart(sandwichPart, false);
+                    .SetSandwichPart(sandwichPart);
 
                 sandwichPartBehaviour
                     .transform

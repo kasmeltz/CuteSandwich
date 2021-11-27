@@ -160,31 +160,6 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 .Load<Sprite>($"Images/Ingredients/{ingredient}");
         }
 
-        public void RotateSauce(int direction)
-        {
-            SelectedSaucedIndex += direction;
-            if (SelectedSaucedIndex < 0)
-            {
-                SelectedSaucedIndex = SaucesAllowed.Count - 1;
-            }
-            else if (SelectedSaucedIndex >= SaucesAllowed.Count)
-            {
-                SelectedSaucedIndex = 0;
-            }
-
-            SetSelectedSauce(SelectedSaucedIndex);
-        }
-
-        public void SetSelectedSauce(int sauceIndex)
-        {
-            SelectedSaucedIndex = sauceIndex;
-
-            var sauce = SaucesAllowed[SelectedSaucedIndex];
-
-            SauceImage.sprite = Resources
-                .Load<Sprite>($"Images/Sauces/{sauce}_bottle");
-        }
-
         public void MakePart()
         {
             var lastPart = SandwichParts
@@ -209,42 +184,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             var sandwichPart = new SandwichPart(ingredient);
 
             part
-                .SetSandwichPart(sandwichPart, true);
-
-            part.Mask.maskable = false;
-
-            SandwichParts
-                .Add(part);
-
-            SetScore(Score - 0.25f);            
-        }
-
-        public void MakeSauce()
-        {
-            /*
-            var lastPart = SandwichParts
-               .LastOrDefault();
-
-            if (lastPart != null &&
-                lastPart.RectTransform.anchoredPosition.x <= -500)
-            {
-                return;
-            }
-
-            var part = Instantiate(SandwichPartPrefab);
-
-            part
-                .transform
-                .SetParent(transform);
-
-            part.RectTransform.anchoredPosition = new Vector2(-600, 0);
-
-            var ingredient = IngredientsAllowed[SelectedIngredientIndex];
-
-            var sandwichPart = new SandwichPart(ingredient);
-
-            part
-                .SetSandwichPart(sandwichPart, true);
+                .SetSandwichPart(sandwichPart);
 
             part.Mask.maskable = false;
 
@@ -252,7 +192,99 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 .Add(part);
 
             SetScore(Score - 0.25f);
-            */
+        }
+
+        public void RotateSauce(int direction)
+        {
+            SelectedSaucedIndex += direction;
+            if (SelectedSaucedIndex < 0)
+            {
+                SelectedSaucedIndex = SaucesAllowed.Count - 1;
+            }
+            else if (SelectedSaucedIndex >= SaucesAllowed.Count)
+            {
+                SelectedSaucedIndex = 0;
+            }
+
+            SetSelectedSauce(SelectedSaucedIndex);
+        }
+
+        public void SetSelectedSauce(int sauceIndex)
+        {
+            SelectedSaucedIndex = sauceIndex;
+
+            var sauce = SaucesAllowed[SelectedSaucedIndex];
+
+            SauceImage.sprite = Resources
+                .Load<Sprite>($"Images/Sauces/{sauce}_bottle");
+        }     
+
+        public void MakeSauce()
+        {
+            SandwichPartBehaviour foundPart = null;
+            foreach(var part in SandwichParts)
+            {
+                if (part.RectTransform.anchoredPosition.x < 480 ||
+                    part.RectTransform.anchoredPosition.x > 620)
+                {
+                    continue;
+                }
+
+                foundPart = part;
+                break;
+            }
+
+            if (foundPart != null)
+            {
+                if (foundPart.SandwichPart.Ingredient == PartIngredient.SpoiledSauce)
+                {
+                    return;
+                }
+
+                if (foundPart.SandwichPart.Sauce != PartSauce.None)
+                {
+                    return;
+                }
+            }
+
+            SetScore(Score - 0.25f);
+
+            var sauce = SaucesAllowed[SelectedSaucedIndex];
+
+            if (foundPart != null)
+            {
+                foundPart
+                    .SetSauce(sauce);
+
+                foundPart.SandwichPart.Sauce = sauce;
+            }
+            else
+            {
+                var part = Instantiate(SandwichPartPrefab);
+
+                part
+                    .transform
+                    .SetParent(transform);
+
+                part.RectTransform.anchoredPosition = new Vector2(540, 0);
+                
+                part.SandwichPart = new SandwichPart(PartIngredient.SpoiledSauce);
+
+                part
+                    .SetShape(-1);
+
+                part
+                    .SetSauce(PartSauce.None);
+
+                part.Ingredient.sprite = Resources
+                    .Load<Sprite>($"Images/Sauces/{sauce}");
+
+                part
+                    .RectTransform.sizeDelta = new Vector2(100, 79);
+
+                SandwichParts
+                    .Add(part);
+            }
         }
 
         public void SetScore(float score)
@@ -308,11 +340,17 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
             foreach (var part in SandwichParts)
             {
+                if (part == null)
+                {
+                    continue;
+                }
+
                 if (part.transform.parent != CreatedParts)
                 {
                     part.RectTransform.anchoredPosition += moveDirection;
 
-                    if (part.SandwichPart.Shape < 0 && 
+                    if (part.SandwichPart.Ingredient != PartIngredient.SpoiledSauce &&
+                        part.SandwichPart.Shape < 0 &&
                         part.RectTransform.anchoredPosition.x >= 0)
                     {
                         part.SandwichPart.Shape = SelectedShapeIndex;
@@ -323,12 +361,21 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
                     if (part.RectTransform.anchoredPosition.x >= 700)
                     {
-                        part.RectTransform.anchoredPosition = new Vector2(0, 0);
-                        part
-                            .transform
-                            .SetParent(CreatedParts);
+                        if (part.SandwichPart.Ingredient == PartIngredient.SpoiledSauce)
+                        {
+                            part
+                                .gameObject
+                                .SetActive(false);
+                        }
+                        else
+                        {
+                            part.RectTransform.anchoredPosition = new Vector2(0, 0);
+                            part
+                                .transform
+                                .SetParent(CreatedParts);
 
-                        CheckSandwichCompleted();
+                            CheckSandwichCompleted();
+                        }
                     }
                 }
             }
@@ -337,7 +384,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         protected void CheckSandwichCompleted()
         {
             AvailableParts
-                .Clear();
+                .Clear();            
 
             foreach (var sandwichPartBehaviour in SandwichParts)
             {
@@ -370,13 +417,12 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 if (partsFound == order.Parts.Count)
                 {
                     sandwichesCompleted++;
+                    ScoreToAdd += order.Score;
                 }
             }
 
             if (sandwichesCompleted == OrdersToCreate)
             {
-                ScoreToAdd += 0.25f * SandwichOrders.Sum(o => o.Parts.Count);
-                ScoreToAdd += 4;
                 ScoreToAdd += OrderTime / 25f;
                 SandwichSceneState = SandwichSceneState.CalculatingScore;
             }
@@ -421,7 +467,9 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
         protected void Reset()
         {
-            foreach(var part in SandwichParts)
+            ScoreToAdd = 0;
+
+            foreach (var part in SandwichParts)
             {
                 MegaDestroy(part.gameObject);
             }

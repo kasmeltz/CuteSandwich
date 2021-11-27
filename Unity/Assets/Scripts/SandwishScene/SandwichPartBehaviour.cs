@@ -21,7 +21,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
         #region Public Methods
 
-        public void SetSandwichPart(SandwichPart sandwichPart, bool useResult)
+        public void SetSandwichPart(SandwichPart sandwichPart)
         {
             SandwichPart = sandwichPart;
 
@@ -41,7 +41,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             Sauce.gameObject.SetActive(true);
 
             var sprite = Resources
-                   .Load<Sprite>($"Images/Sauce/{sauce}");
+                   .Load<Sprite>($"Images/Sauces/{sauce}");
 
             if (sprite == null)
             {
@@ -77,24 +77,24 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 Outline
                     .gameObject
                     .SetActive(false);
+
+                return;
             }
-            else
-            {
-                var sprites = Resources
-                    .LoadAll<Sprite>("Images/Shapes/all_shapes");
 
-                Mask.sprite = sprites[shapeIndex];
-                Ingredient.maskable = true;
+            var sprites = Resources
+                .LoadAll<Sprite>("Images/Shapes/all_shapes");
 
-                Outline
-                    .gameObject
-                    .SetActive(true);
+            Mask.sprite = sprites[shapeIndex];
+            Ingredient.maskable = true;
 
-                sprites = Resources
-                   .LoadAll<Sprite>("Images/Shapes/all_shapes_outline");
+            Outline
+                .gameObject
+                .SetActive(true);
 
-                Outline.sprite = sprites[shapeIndex];
-            }
+            sprites = Resources
+                .LoadAll<Sprite>("Images/Shapes/all_shapes_outline");
+
+            Outline.sprite = sprites[shapeIndex];
         }
 
         #endregion
