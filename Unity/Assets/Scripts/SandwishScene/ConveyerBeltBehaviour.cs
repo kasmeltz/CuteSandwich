@@ -16,7 +16,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         public float BasePartMoveSpeed = 100;
         public float PartCreatePoint = -100;
         public float PartMoveSpeedPerLevel = 10;        
-        public Image ShapeImage;        
+        public Image ShapeImage;
+        public Image IngredientImage;      
         public int OrdersToCreate = 1;             
 
         public SandwichOrderPanelBehaviour OrderPanelPrefab;
@@ -26,7 +27,9 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         public RectTransform OrderContainer;
         public RectTransform CreatedParts;
 
-        protected int SelectedShapeIndex { get; set; }
+        public int SelectedShapeIndex { get; set; }
+
+        public int SelectedIngredientIndex { get; set; }
 
         public Queue<SandwichPart> PartsToCreate { get; set; }
 
