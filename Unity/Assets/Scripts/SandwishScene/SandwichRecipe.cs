@@ -25,6 +25,96 @@
                 {
                     new SandwichPart(PartIngredient.WhiteBread),
                     new SandwichPart(PartIngredient.Cheddar),
+                    new SandwichPart(PartIngredient.WhiteBread)
+                }
+            },
+            ["Meatball"] = new SandwichOrder
+            {
+                Parts = new List<SandwichPart>
+                {
+                    new SandwichPart(PartIngredient.ItalianBread),
+                    new SandwichPart(PartIngredient.Meatballs),
+                    new SandwichPart(PartIngredient.Provolone, PartSauce.Tomato),
+                    new SandwichPart(PartIngredient.ItalianBread),
+                }
+            },
+            ["BLT"] = new SandwichOrder
+            {
+                Parts = new List<SandwichPart>
+                {
+                    new SandwichPart(PartIngredient.WhiteBread, PartSauce.Mayonnaise),
+                    new SandwichPart(PartIngredient.Bacon),
+                    new SandwichPart(PartIngredient.Lettuce),
+                    new SandwichPart(PartIngredient.Tomato),                    
+                    new SandwichPart(PartIngredient.WhiteBread),
+                }
+            },
+            ["Peanut Butter and Jelly"] = new SandwichOrder
+            {
+                Parts = new List<SandwichPart>
+                {
+                    new SandwichPart(PartIngredient.WhiteBread, PartSauce.PeanutButter),
+                    new SandwichPart(PartIngredient.WhiteBread, PartSauce.Jelly)
+                }
+            },
+            ["Roast Beef"] = new SandwichOrder
+            {
+                Parts = new List<SandwichPart>
+                {
+                    new SandwichPart(PartIngredient.WhiteBread),
+                    new SandwichPart(PartIngredient.RoastBeef, PartSauce.DijonMustard),
+                    new SandwichPart(PartIngredient.Provolone),
+                    new SandwichPart(PartIngredient.RedOnion),                    
+                    new SandwichPart(PartIngredient.WhiteBread),
+                }
+            },
+            ["Tuna"] = new SandwichOrder
+            {
+                Parts = new List<SandwichPart>
+                {
+                    new SandwichPart(PartIngredient.WhiteBread, PartSauce.Mayonnaise),
+                    new SandwichPart(PartIngredient.Tuna),
+                    new SandwichPart(PartIngredient.Lettuce),
+                    new SandwichPart(PartIngredient.Tomato),
+                    new SandwichPart(PartIngredient.WhiteBread),
+                }
+            },
+            ["Turkey"] = new SandwichOrder
+            {
+                Parts = new List<SandwichPart>
+                {
+                    new SandwichPart(PartIngredient.WhiteBread, PartSauce.Mayonnaise),
+                    new SandwichPart(PartIngredient.Turkey),
+                    new SandwichPart(PartIngredient.Lettuce),
+                    new SandwichPart(PartIngredient.Tomato),
+                    new SandwichPart(PartIngredient.WhiteBread),
+                }
+            },
+            ["Grilled Chicken"] = new SandwichOrder
+            {
+                Parts = new List<SandwichPart>
+                {
+                    new SandwichPart(PartIngredient.WhiteBread, PartSauce.Mayonnaise),
+                    new SandwichPart(PartIngredient.Chicken),
+                    new SandwichPart(PartIngredient.SwissCheese),
+                    new SandwichPart(PartIngredient.Lettuce),
+                    new SandwichPart(PartIngredient.Tomato),
+                    new SandwichPart(PartIngredient.WhiteBread, PartSauce.DijonMustard),
+                }
+            },
+            ["Club"] = new SandwichOrder
+            {
+                Parts = new List<SandwichPart>
+                {
+                    new SandwichPart(PartIngredient.WhiteBread, PartSauce.Mayonnaise),
+                    new SandwichPart(PartIngredient.Turkey),
+                    new SandwichPart(PartIngredient.Ham),
+                    new SandwichPart(PartIngredient.WhiteBread, PartSauce.Mayonnaise),                    
+                    new SandwichPart(PartIngredient.Bacon),
+                    new SandwichPart(PartIngredient.Cheddar),
+                    new SandwichPart(PartIngredient.Lettuce),
+                    new SandwichPart(PartIngredient.Tomato),
+                    new SandwichPart(PartIngredient.WhiteBread, PartSauce.DijonMustard),
                 }
             }
         };

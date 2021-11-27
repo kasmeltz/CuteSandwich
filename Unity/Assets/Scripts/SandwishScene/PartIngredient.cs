@@ -14,6 +14,11 @@
         ItalianBread,
         Provolone,
         SesameBread,
-        WheatBread
+        WheatBread,
+        Meatballs,
+        RedOnion,
+        RoastBeef,
+        Tuna,
+        Turkey
     }
 }

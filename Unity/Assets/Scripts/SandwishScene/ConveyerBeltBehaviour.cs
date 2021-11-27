@@ -603,13 +603,13 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 .Enqueue(PartSauce.Tomato);
 
             SaucesToAdd
+                .Enqueue(PartSauce.DijonMustard);
+
+            SaucesToAdd
                 .Enqueue(PartSauce.PeanutButter);
 
             SaucesToAdd
                 .Enqueue(PartSauce.Jelly);
-
-            SaucesToAdd
-                .Enqueue(PartSauce.DijonMustard);
 
             
             IngredientsAllowed = new List<PartIngredient>
@@ -620,10 +620,19 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             IngredientsToAdd = new Queue<PartIngredient>();
 
             IngredientsToAdd
-                .Enqueue(PartIngredient.Tomato);
+                .Enqueue(PartIngredient.ItalianBread);
+
+            IngredientsToAdd
+                .Enqueue(PartIngredient.Meatballs);
+
+            IngredientsToAdd
+                .Enqueue(PartIngredient.Provolone);
 
             IngredientsToAdd
                 .Enqueue(PartIngredient.WheatBread);
+
+            IngredientsToAdd
+                .Enqueue(PartIngredient.Tomato);
             
             IngredientsToAdd
                 .Enqueue(PartIngredient.Lettuce);
@@ -635,13 +644,19 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 .Enqueue(PartIngredient.SesameBread);
 
             IngredientsToAdd
+                .Enqueue(PartIngredient.RoastBeef);
+
+            IngredientsToAdd
+                .Enqueue(PartIngredient.RedOnion);
+
+            IngredientsToAdd
+                .Enqueue(PartIngredient.Tuna);
+
+            IngredientsToAdd
                 .Enqueue(PartIngredient.Chicken);
 
             IngredientsToAdd
-                .Enqueue(PartIngredient.ItalianBread);
-
-            IngredientsToAdd
-                .Enqueue(PartIngredient.Provolone);
+                .Enqueue(PartIngredient.Turkey);
 
             AvailableParts = new List<SandwichPartBehaviour>();
             SandwichOrders = new List<SandwichOrder>();
