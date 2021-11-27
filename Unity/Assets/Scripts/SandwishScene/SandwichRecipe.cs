@@ -17,7 +17,7 @@
 
         #region Public Methods
 
-        public static SandwichOrder GetRandomOrder(HashSet<PartIngredient> ingredientsAllowed)
+        public static SandwichOrder GetRandomOrder(List<PartIngredient> ingredientsAllowed)
         {
             List<SandwichOrder> potentialOrders = new List<SandwichOrder>();
 
@@ -26,7 +26,8 @@
                 bool isInvalidIngredient = false;
                 foreach(var part in recipe.Parts)
                 {
-                    if (!ingredientsAllowed.Contains(part.Ingredient))
+                    if (!ingredientsAllowed
+                        .Contains(part.Ingredient))
                     {
                         isInvalidIngredient = true;
                         break;

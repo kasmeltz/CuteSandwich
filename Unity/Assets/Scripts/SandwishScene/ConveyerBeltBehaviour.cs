@@ -31,9 +31,9 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
         public int SelectedIngredientIndex { get; set; }
 
-        public Queue<SandwichPart> PartsToCreate { get; set; }
-
         public List<SandwichOrder> SandwichOrders { get; set; }
+
+        public List<SandwichPartBehaviour> AvailableParts { get; set; }
 
         public List<SandwichPartBehaviour> RequestedParts { get; set; }
 
@@ -45,7 +45,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         
         public Queue<PartIngredient> IngredientsToAdd { get; set; }
 
-        public HashSet<PartIngredient> IngredientsAllowed { get; set; }
+        public List<PartIngredient> IngredientsAllowed { get; set; }
 
         public float Score { get; set; }
 
@@ -56,7 +56,6 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         public int Level { get; set; }
 
         public float PartMoveSpeed { get; set; }
-
 
         #endregion
 
@@ -85,15 +84,6 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
                 SandwichOrders
                     .Add(order);
-            }
-            
-            foreach(var order in SandwichOrders)
-            {
-                foreach(var part in order.Parts)
-                {
-                    PartsToCreate
-                        .Enqueue(part);
-                }
             }
         }
 
@@ -124,58 +114,100 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             ShapeImage.sprite = sprites[shapeIndex];
         }
 
-        #endregion
-
-        #region Protected Methods
-      
-        protected void MakeNewParts()
+        public void RotateIngredient(int direction)
         {
-            if (!PartsToCreate.Any())
+            SelectedIngredientIndex += direction;
+            if (SelectedIngredientIndex < 0)
+            {
+                SelectedIngredientIndex = IngredientsAllowed.Count - 1;
+            }
+            else if (SelectedIngredientIndex >= IngredientsAllowed.Count)
+            {
+                SelectedIngredientIndex = 0;
+            }
+
+            SetSelectedIngredient(SelectedIngredientIndex);
+        }
+
+        public void SetSelectedIngredient(int ingredientIndex)
+        {
+            SelectedIngredientIndex = ingredientIndex;
+
+            var ingredient = IngredientsAllowed[SelectedIngredientIndex];
+
+            IngredientImage.sprite = Resources
+                .Load<Sprite>($"Images/Ingredients/{ingredient}");
+        }
+
+        public void MakePart()
+        {
+            var lastPart = SandwichParts
+               .LastOrDefault();
+
+            if (lastPart != null &&
+                lastPart.RectTransform.anchoredPosition.x <= -700)
             {
                 return;
             }
 
-            bool createPart = false;
+            var part = Instantiate(SandwichPartPrefab);
 
-            var lastPart = SandwichParts
-                .LastOrDefault();
+            part
+                .transform
+                .SetParent(transform);
 
-            if (lastPart == null)
+            part.RectTransform.anchoredPosition = new Vector2(-700, 0);
+
+            var ingredient = IngredientsAllowed[SelectedIngredientIndex];
+
+            var sandwichPart = new SandwichPart
             {
-                createPart = true;
-            }
-            else
+                Ingredient = ingredient,
+                ResultShape = -1,
+                DesiredShape = -1
+            };
+
+            part
+                .SetSandwichPart(sandwichPart, true);
+
+            part.Mask.maskable = false;
+
+            SandwichParts
+                .Add(part);
+
+            SetScore(Score - 1);
+
+            if (Score < 0)
             {
-                if (lastPart.RectTransform.anchoredPosition.x >= PartCreatePoint)
-                {
-                    createPart = true;
-                }
+                SandwichSceneState = SandwichSceneState.GameOver;
             }
+        }
 
-            if (createPart)
+        public void SetScore(float score)
+        {
+            Score = score;
+            ScoreText.text = $"{Mathf.RoundToInt(Score)}";
+        }
+
+        public void SetLevel(int level)
+        {
+            Level = level;
+            if (TotalPossibleShapes == 0 ||
+                MaxShapeIndex < TotalPossibleShapes)
             {
-                var part = Instantiate(SandwichPartPrefab);
-                
-                part
-                    .transform
-                    .SetParent(transform);
-
-                part.RectTransform.anchoredPosition = new Vector2(-800, 0);
-
-                part
-                    .SetSandwichPart(PartsToCreate.Dequeue(), true);
-
-                part.Mask.maskable = false;
-                
-                SandwichParts
-                    .Add(part);
+                MaxShapeIndex = (Level / 2) + 4;
             }
-        }        
+
+            PartMoveSpeed = BasePartMoveSpeed + (PartMoveSpeedPerLevel * Level);
+        }
+
+
+        #endregion
+
+        #region Protected Methods
 
         protected void MoveConveyer()
         {
-            MakeNewParts();
-
             Vector2 moveDirection = new Vector3(Time.deltaTime * PartMoveSpeed, 0);
 
             foreach (var part in SandwichParts)
@@ -199,32 +231,22 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                         part
                             .transform
                             .SetParent(CreatedParts);
+
+                        CheckSandwichCompleted();
                     }
-                }
-            }
-
-            var lastPart = SandwichParts
-                .LastOrDefault();
-
-            if (!PartsToCreate.Any())
-            {
-                if (lastPart.transform.parent == CreatedParts)
-                {
-                    CheckSandwichParts();
                 }
             }
         }
 
-        protected void CheckSandwichParts()
+        protected void CheckSandwichCompleted()
         {
-            ScoreToAdd = 0;
-
-            List<SandwichPart> availableParts = new List<SandwichPart>();
+            AvailableParts
+                .Clear();
 
             foreach (var sandwichPartBehaviour in SandwichParts)
             {
-                availableParts
-                    .Add(sandwichPartBehaviour.SandwichPart);
+                AvailableParts
+                    .Add(sandwichPartBehaviour);
             }
 
             int sandwichesCompleted = 0;
@@ -233,15 +255,15 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 int partsFound = 0;
                 foreach (var part in order.Parts)
                 {
-                    var availablePart = availableParts.FirstOrDefault(o =>
-                        o.Ingredient == part.Ingredient &&
-                        o.ResultShape == part.DesiredShape);
+                    var availablePart = AvailableParts.FirstOrDefault(o =>
+                        o.transform.parent == CreatedParts &&
+                        o.SandwichPart.Ingredient == part.Ingredient &&
+                        o.SandwichPart.ResultShape == part.DesiredShape);
 
                     if (availablePart != null)
                     {
                         partsFound++;
-                        ScoreToAdd += 10 * (Level + 1);
-                        availableParts
+                        AvailableParts
                             .Remove(availablePart);
                     }
                 }
@@ -249,36 +271,15 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 if (partsFound == order.Parts.Count)
                 {
                     sandwichesCompleted++;
-                    ScoreToAdd += 50 * (Level + 1);
                 }
             }
 
-            if (sandwichesCompleted > 0)
+            if (sandwichesCompleted == OrdersToCreate)
             {
+                ScoreToAdd += 0.25f * SandwichOrders.Sum(o => o.Parts.Count);
+                ScoreToAdd += 4;
                 SandwichSceneState = SandwichSceneState.CalculatingScore;
             }
-            else
-            {
-                SandwichSceneState = SandwichSceneState.GameOver;
-            }
-        }
-
-        protected void SetScore(float score)
-        {
-            Score = score;
-            ScoreText.text = $"{Mathf.RoundToInt(Score)}";
-        }
-
-        protected void SetLevel(int level)
-        {
-            Level = level;
-            if (TotalPossibleShapes == 0 ||
-                MaxShapeIndex < TotalPossibleShapes)
-            {
-                MaxShapeIndex = (Level / 2) + 4;
-            }
-
-            PartMoveSpeed = BasePartMoveSpeed + (PartMoveSpeedPerLevel * Level);
         }
 
         protected void NextLevel()
@@ -323,9 +324,6 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
             SandwichOrders
                 .Clear();
-
-            PartsToCreate
-                .Clear();
             
             foreach(Transform item in OrderContainer)
             {
@@ -350,6 +348,21 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {
                 RotateShape(1);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                RotateIngredient(-1);
+            }
+
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                RotateIngredient(1);
+            }
+
+            if (Input.GetKeyDown(KeyCode.LeftControl))
+            {
+                MakePart();
             }
         }
 
@@ -408,13 +421,15 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         {
             base
                 .Awake();
+            
+            SelectedIngredientIndex = 0;
 
             SandwichSceneState = SandwichSceneState.MakingSandwiches;
 
             SetLevel(0);
-            SetScore(0);
+            SetScore(10);
 
-            IngredientsAllowed = new HashSet<PartIngredient>
+            IngredientsAllowed = new List<PartIngredient>
             {
                 PartIngredient.WhiteBread, PartIngredient.Ham, PartIngredient.SwissCheese, PartIngredient.Bacon
             };
@@ -427,7 +442,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             IngredientsToAdd
                 .Enqueue(PartIngredient.Lettuce);
 
-            PartsToCreate = new Queue<SandwichPart>();
+            AvailableParts = new List<SandwichPartBehaviour>();
             SandwichOrders = new List<SandwichOrder>();
             RequestedParts = new List<SandwichPartBehaviour>();
             SandwichParts = new List<SandwichPartBehaviour>();
