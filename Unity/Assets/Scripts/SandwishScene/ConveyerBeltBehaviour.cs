@@ -30,7 +30,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
         protected int SelectedShapeIndex { get; set; }
 
-        public List<SandwichPart> PartsToCreate { get; set; }
+        public Queue<SandwichPart> PartsToCreate { get; set; }
 
         public List<SandwichOrder> SandwichOrders { get; set; }
 
@@ -76,7 +76,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 foreach(var part in order.Parts)
                 {
                     PartsToCreate
-                        .Add(part);
+                        .Enqueue(part);
                 }
             }
         }
@@ -136,9 +136,6 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
             if (createPart)
             {
-                var partIndex = Random
-                    .Range(0, PartsToCreate.Count);
-
                 var part = Instantiate(SandwichPartPrefab);
                 
                 part
@@ -148,15 +145,12 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 part.RectTransform.anchoredPosition = new Vector2(-800, 0);
 
                 part
-                    .SetSandwichPart(PartsToCreate[partIndex], true);
+                    .SetSandwichPart(PartsToCreate.Dequeue(), true);
 
                 part.Mask.maskable = false;
                 
                 SandwichParts
                     .Add(part);
-
-                PartsToCreate
-                    .RemoveAt(partIndex);
             }
         }        
 
@@ -377,7 +371,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 PartIngredient.WhiteBread, PartIngredient.Ham, PartIngredient.SwissCheese
             };
 
-            PartsToCreate = new List<SandwichPart>();
+            PartsToCreate = new Queue<SandwichPart>();
             SandwichOrders = new List<SandwichOrder>();
             RequestedParts = new List<SandwichPartBehaviour>();
             SandwichParts = new List<SandwichPartBehaviour>();
