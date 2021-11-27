@@ -413,14 +413,16 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
             IngredientsAllowed = new HashSet<PartIngredient>
             {
-                PartIngredient.WhiteBread, PartIngredient.Ham, PartIngredient.SwissCheese
+                PartIngredient.WhiteBread, PartIngredient.Ham, PartIngredient.SwissCheese, PartIngredient.Bacon
             };
 
             IngredientsToAdd = new Queue<PartIngredient>();
 
-            IngredientsToAdd.Enqueue(PartIngredient.Bacon);
-            IngredientsToAdd.Enqueue(PartIngredient.Tomato);
-            IngredientsToAdd.Enqueue(PartIngredient.Lettuce);
+            IngredientsToAdd
+                .Enqueue(PartIngredient.Tomato);
+
+            IngredientsToAdd
+                .Enqueue(PartIngredient.Lettuce);
 
             PartsToCreate = new Queue<SandwichPart>();
             SandwichOrders = new List<SandwichOrder>();

@@ -9,7 +9,8 @@
 
         public static Dictionary<string, SandwichOrder> Recipes = new Dictionary<string, SandwichOrder>
         {
-            ["Ham And Swiss"] = new SandwichOrder(PartIngredient.WhiteBread, PartIngredient.Ham, PartIngredient.SwissCheese, PartIngredient.WhiteBread)           
+            ["Ham And Swiss"] = new SandwichOrder(PartIngredient.WhiteBread, PartIngredient.Ham, PartIngredient.SwissCheese, PartIngredient.WhiteBread),
+            ["BLT"] = new SandwichOrder(PartIngredient.WhiteBread, PartIngredient.Bacon, PartIngredient.Lettuce, PartIngredient.Tomato, PartIngredient.WhiteBread)
         };
 
         #endregion
