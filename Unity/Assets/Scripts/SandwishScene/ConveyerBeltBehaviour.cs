@@ -204,7 +204,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
             PartMoveSpeed = BasePartMoveSpeed + (PartMoveSpeedPerLevel * Level);
 
-            OrderTime = 60;
+            OrderTime = 90;
+            OrderTimeText.text = $"{OrderTime:0.0}";
         }
 
 
