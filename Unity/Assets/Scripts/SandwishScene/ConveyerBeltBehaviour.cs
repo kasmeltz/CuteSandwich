@@ -202,7 +202,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 .transform
                 .SetParent(transform);
 
-            part.RectTransform.anchoredPosition = new Vector2(-700, 0);
+            part.RectTransform.anchoredPosition = new Vector2(-600, 0);
 
             var ingredient = IngredientsAllowed[SelectedIngredientIndex];
 
