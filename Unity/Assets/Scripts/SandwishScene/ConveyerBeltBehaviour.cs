@@ -219,6 +219,42 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             SetScore(Score - 0.25f);            
         }
 
+        public void MakeSauce()
+        {
+            /*
+            var lastPart = SandwichParts
+               .LastOrDefault();
+
+            if (lastPart != null &&
+                lastPart.RectTransform.anchoredPosition.x <= -500)
+            {
+                return;
+            }
+
+            var part = Instantiate(SandwichPartPrefab);
+
+            part
+                .transform
+                .SetParent(transform);
+
+            part.RectTransform.anchoredPosition = new Vector2(-600, 0);
+
+            var ingredient = IngredientsAllowed[SelectedIngredientIndex];
+
+            var sandwichPart = new SandwichPart(ingredient);
+
+            part
+                .SetSandwichPart(sandwichPart, true);
+
+            part.Mask.maskable = false;
+
+            SandwichParts
+                .Add(part);
+
+            SetScore(Score - 0.25f);
+            */
+        }
+
         public void SetScore(float score)
         {
             Score = score;
@@ -444,6 +480,21 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             if (Input.GetKeyDown(KeyCode.LeftControl))
             {
                 MakePart();
+            }
+
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                RotateSauce(-1);
+            }
+
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                RotateSauce(1);
+            }
+
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                MakeSauce();
             }
         }
 
