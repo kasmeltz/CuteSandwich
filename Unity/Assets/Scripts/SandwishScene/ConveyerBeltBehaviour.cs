@@ -17,6 +17,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
         public SandwichPartBehaviour SandwichPartPrefab;
 
+        public RectTransform CreatedParts;
+
         protected PartShape SelectedShape { get; set; }
 
         public List<SandwichPart> PartsToCreate { get; set; }
@@ -62,6 +64,17 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 part = new SandwichPart
                 {
                     Ingredient = PartIngredient.Mozzarella,
+                    DesiredShape = PartShape.Heart,
+                    ResultShape = PartShape.None
+                };
+
+                order
+                    .Parts
+                    .Add(part);
+
+                var part = new SandwichPart
+                {
+                    Ingredient = PartIngredient.WhiteBread,
                     DesiredShape = PartShape.Heart,
                     ResultShape = PartShape.None
                 };
@@ -180,25 +193,36 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
             foreach (var part in SandwichParts)
             {
-                part.PartMask.rectTransform.anchoredPosition += moveDirection;
-
-                if (part.PartMask.rectTransform.anchoredPosition.x >= 0)
+                if (part.transform.parent != CreatedParts)
                 {
-                    if (!part.PartImage.maskable)
-                    {
-                        var maskSprite = Resources
-                            .Load<Sprite>($"Images/Shapes/{SelectedShape}");
+                    part.PartMask.rectTransform.anchoredPosition += moveDirection;
 
-                        if (maskSprite == null)
+                    if (part.PartMask.rectTransform.anchoredPosition.x >= 0)
+                    {
+                        if (!part.PartImage.maskable)
                         {
-                            Debug.LogError($"CANT FIND IMAGE FOR SHAPE {SelectedShape}");
+                            var maskSprite = Resources
+                                .Load<Sprite>($"Images/Shapes/{SelectedShape}");
+
+                            if (maskSprite == null)
+                            {
+                                Debug.LogError($"CANT FIND IMAGE FOR SHAPE {SelectedShape}");
+                            }
+                            else
+                            {
+                                part.SandwichPart.ResultShape = SelectedShape;
+                                part.PartMask.sprite = maskSprite;
+                                part.PartImage.maskable = true;
+                            }
                         }
-                        else
-                        {
-                            part.SandwichPart.ResultShape = SelectedShape;
-                            part.PartMask.sprite = maskSprite;        
-                            part.PartImage.maskable = true;
-                        }
+                    }
+
+                    if (part.PartMask.rectTransform.anchoredPosition.x >= 700)
+                    {
+                        part.PartMask.rectTransform.anchoredPosition = new Vector2(0, 0);
+                        part
+                            .transform
+                            .SetParent(CreatedParts);
                     }
                 }
             }
