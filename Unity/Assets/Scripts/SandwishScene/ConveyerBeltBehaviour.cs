@@ -495,16 +495,13 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
             SaucesAllowed = new List<PartSauce>
             {
-                PartSauce.Butter
+                PartSauce.Mayonnaise
             };
 
             SaucesToAdd = new Queue<PartSauce>();
 
             SaucesToAdd
                 .Enqueue(PartSauce.TomatoSauce);
-
-            SaucesToAdd
-                .Enqueue(PartSauce.Mayonnaise);
 
             SaucesToAdd
                 .Enqueue(PartSauce.PeanutButter);
@@ -518,7 +515,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             
             IngredientsAllowed = new List<PartIngredient>
             {
-                PartIngredient.WhiteBread, PartIngredient.Ham, PartIngredient.SwissCheese
+                PartIngredient.WhiteBread, PartIngredient.Ham, PartIngredient.SwissCheese, PartIngredient.Cheddar
             };
 
             IngredientsToAdd = new Queue<PartIngredient>();
@@ -537,9 +534,6 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
             IngredientsToAdd
                 .Enqueue(PartIngredient.SesameBread);
-
-            IngredientsToAdd
-                .Enqueue(PartIngredient.Cheddar);
 
             IngredientsToAdd
                 .Enqueue(PartIngredient.Chicken);

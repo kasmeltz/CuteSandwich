@@ -3,7 +3,6 @@
     public enum PartSauce
     {
         None,
-        Butter,
         TomatoSauce,
         Mayonnaise,
         PeanutButter,

@@ -18,8 +18,15 @@
                     new SandwichPart(PartIngredient.SwissCheese),
                     new SandwichPart(PartIngredient.WhiteBread)                    
                 }
+            },
+            ["Grilled Cheese"] = new SandwichOrder
+            {
+                Parts = new List<SandwichPart>
+                {
+                    new SandwichPart(PartIngredient.WhiteBread),
+                    new SandwichPart(PartIngredient.Cheddar),
+                }
             }
-
         };
 
         #endregion
