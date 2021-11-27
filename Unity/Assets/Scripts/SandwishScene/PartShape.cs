@@ -4,6 +4,6 @@
     {
         None,
         Heart,
-        Flower
+        Star
     }
 }

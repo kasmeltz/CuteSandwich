@@ -2,7 +2,9 @@
 {
     public class SandwichPart
     {
-        public PartShape Shape { get; set; }
+        public PartShape DesiredShape { get; set; }
+
+        public PartShape ResultShape { get; set; }
 
         public PartIngredient Ingredient { get; set; }
     }

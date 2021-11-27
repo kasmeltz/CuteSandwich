@@ -584,6 +584,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PartMoveSpeed: 200
+  PartCreatePoint: -200
+  ShapeImage: {fileID: 1339527360}
   SandwichPartPrefab: {fileID: 1862711677873008475, guid: 9e85a5fefeee3b54bbce1fd630858745, type: 3}
 --- !u!114 &1188810866
 MonoBehaviour:

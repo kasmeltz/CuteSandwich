@@ -3,6 +3,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
     using System.Collections.Generic;
     using System.Linq;
     using UnityEngine;
+    using UnityEngine.UI;
 
     [AddComponentMenu("HairyNerd/CuteSandwich/SandwichScene/ConveyerBelt")]
 
@@ -12,8 +13,11 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
         public float PartMoveSpeed = 200;
         public float PartCreatePoint = -200;
+        public Image ShapeImage;
 
         public SandwichPartBehaviour SandwichPartPrefab;
+
+        protected PartShape SelectedShape { get; set; }
 
         public List<SandwichPart> PartsToCreate { get; set; }
 
@@ -36,7 +40,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 var part = new SandwichPart
                 {
                     Ingredient = PartIngredient.WhiteBread,
-                    Shape = PartShape.Heart
+                    DesiredShape = PartShape.Heart,
+                    ResultShape = PartShape.None
                 };
 
                 order
@@ -46,7 +51,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 part = new SandwichPart
                 {
                     Ingredient = PartIngredient.HamPlain,
-                    Shape = PartShape.Heart
+                    DesiredShape = PartShape.Heart,
+                    ResultShape = PartShape.None
                 };
 
                 order
@@ -56,7 +62,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 part = new SandwichPart
                 {
                     Ingredient = PartIngredient.Mozzarella,
-                    Shape = PartShape.Heart
+                    DesiredShape = PartShape.Heart,
+                    ResultShape = PartShape.None
                 };
 
                 order
@@ -75,6 +82,29 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                         .Add(part);
                 }
             }
+        }
+
+        public void RotateShape(int direction)
+        {
+            int currentShape = (int)SelectedShape;
+            currentShape += direction;
+            if (currentShape < 1)
+            {
+                currentShape = 2;
+            }
+            else if (currentShape > 2)
+            {
+                currentShape = 1;
+            }
+
+            SetSelectedShape((PartShape)currentShape);
+        }
+
+        public void SetSelectedShape(PartShape shape)
+        {
+            SelectedShape = shape;
+            ShapeImage.sprite = Resources
+                .Load<Sprite>($"Images/Shapes/{SelectedShape}");
         }
 
         #endregion
@@ -157,15 +187,16 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                     if (!part.PartImage.maskable)
                     {
                         var maskSprite = Resources
-                            .Load<Sprite>($"Images/Shapes/{part.SandwichPart.Shape}");
+                            .Load<Sprite>($"Images/Shapes/{SelectedShape}");
 
                         if (maskSprite == null)
                         {
-                            Debug.LogError($"CANT FIND IMAGE FOR SHAPE {part.SandwichPart.Shape}");
+                            Debug.LogError($"CANT FIND IMAGE FOR SHAPE {SelectedShape}");
                         }
                         else
                         {
-                            part.PartMask.sprite = maskSprite;
+                            part.SandwichPart.ResultShape = SelectedShape;
+                            part.PartMask.sprite = maskSprite;        
                             part.PartImage.maskable = true;
                         }
                     }
@@ -190,7 +221,17 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
         protected void Update()
         {
-            MoveConveyer();                     
+            MoveConveyer();
+
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                RotateShape(-1);
+            }
+
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                RotateShape(1);
+            }
         }
 
         protected override void Awake()
@@ -201,6 +242,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             PartsToCreate = new List<SandwichPart>();
             SandwichOrders = new List<SandwichOrder>();
             SandwichParts = new List<SandwichPartBehaviour>();
+
+            SetSelectedShape(PartShape.Heart);
 
             MakeOrders();
         }
