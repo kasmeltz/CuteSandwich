@@ -159,7 +159,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                .LastOrDefault();
 
             if (lastPart != null &&
-                lastPart.RectTransform.anchoredPosition.x <= -600)
+                lastPart.RectTransform.anchoredPosition.x <= -500)
             {
                 return;
             }
@@ -461,11 +461,11 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             IngredientsToAdd = new Queue<PartIngredient>();
 
             IngredientsToAdd
-                .Enqueue(PartIngredient.WheatBread);
-
-            IngredientsToAdd
                 .Enqueue(PartIngredient.Tomato);
 
+            IngredientsToAdd
+                .Enqueue(PartIngredient.WheatBread);
+            
             IngredientsToAdd
                 .Enqueue(PartIngredient.Lettuce);
 
