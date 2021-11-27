@@ -3,10 +3,10 @@
     public enum PartSauce
     {
         None,
-        TomatoSauce,
+        Tomato,
         Mayonnaise,
         PeanutButter,
-        StrawberryJam,
+        Jelly,
         DijonMustard
     }
 }

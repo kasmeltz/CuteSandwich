@@ -501,13 +501,13 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             SaucesToAdd = new Queue<PartSauce>();
 
             SaucesToAdd
-                .Enqueue(PartSauce.TomatoSauce);
+                .Enqueue(PartSauce.Tomato);
 
             SaucesToAdd
                 .Enqueue(PartSauce.PeanutButter);
 
             SaucesToAdd
-                .Enqueue(PartSauce.StrawberryJam);
+                .Enqueue(PartSauce.Jelly);
 
             SaucesToAdd
                 .Enqueue(PartSauce.DijonMustard);
