@@ -19,7 +19,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         public float PartCreatePoint = -100;
         public float PartMoveSpeedPerLevel = 10;        
         public Image ShapeImage;
-        public Image IngredientImage;      
+        public Image IngredientImage;
+        public Image SauceImage;
         public int OrdersToCreate = 1;             
 
         public SandwichOrderPanelBehaviour OrderPanelPrefab;
@@ -33,6 +34,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
         public int SelectedIngredientIndex { get; set; }
 
+        public int SelectedSaucedIndex { get; set; }
+
         public List<SandwichOrder> SandwichOrders { get; set; }
 
         public List<SandwichPartBehaviour> AvailableParts { get; set; }
@@ -45,9 +48,13 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
         protected int TotalPossibleShapes { get; set; }
         
+        public List<PartIngredient> IngredientsAllowed { get; set; }
+
         public Queue<PartIngredient> IngredientsToAdd { get; set; }
 
-        public List<PartIngredient> IngredientsAllowed { get; set; }
+        public List<PartSauce> SaucesAllowed { get; set; }
+
+        public Queue<PartSauce> SaucesToAdd { get; set; }
 
         public List<PartIngredient> BreadTypesAvailable { get; set; }
 
@@ -74,7 +81,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 var orderPanel = Instantiate(OrderPanelPrefab);
 
                 var order = SandwichRecipe
-                    .GetRandomOrder(IngredientsAllowed);
+                    .GetRandomOrder(IngredientsAllowed, SaucesAllowed);
 
                 var breadIndex = Random
                     .Range(0, BreadTypesAvailable.Count);
@@ -152,6 +159,32 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             IngredientImage.sprite = Resources
                 .Load<Sprite>($"Images/Ingredients/{ingredient}");
         }
+
+        public void RotateSauce(int direction)
+        {
+            SelectedSaucedIndex += direction;
+            if (SelectedSaucedIndex < 0)
+            {
+                SelectedSaucedIndex = IngredientsAllowed.Count - 1;
+            }
+            else if (SelectedSaucedIndex >= IngredientsAllowed.Count)
+            {
+                SelectedSaucedIndex = 0;
+            }
+
+            SetSelectedIngredient(SelectedIngredientIndex);
+        }
+
+        public void SetSelectedSauce(int sauceIndex)
+        {
+            SelectedIngredientIndex = ingredientIndex;
+
+            var ingredient = IngredientsAllowed[SelectedIngredientIndex];
+
+            IngredientImage.sprite = Resources
+                .Load<Sprite>($"Images/Ingredients/{ingredient}");
+        }
+
 
         public void MakePart()
         {
@@ -339,6 +372,16 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 }
             }
 
+            if(SaucesToAdd
+                .Any())
+            {
+                var sauce = SaucesToAdd
+                    .Dequeue();
+
+                SaucesAllowed
+                    .Add(sauce);
+            }
+
             SetSelectedShape(0);
             MakeOrders();
 
@@ -442,6 +485,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         protected void StartNewGame()
         {
             SelectedIngredientIndex = 0;
+            SelectedSaucedIndex = 0;
+            SelectedShapeIndex = 0;
 
             SandwichSceneState = SandwichSceneState.MakingSandwiches;
 
@@ -453,6 +498,30 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 PartIngredient.WhiteBread
             };
 
+
+            SaucesAllowed = new List<PartSauce>
+            {
+                PartSauce.Butter
+            };
+
+            SaucesToAdd = new Queue<PartSauce>();
+
+            SaucesToAdd
+                .Enqueue(PartSauce.TomatoSauce);
+
+            SaucesToAdd
+                .Enqueue(PartSauce.Mayonnaise);
+
+            SaucesToAdd
+                .Enqueue(PartSauce.PeanutButter);
+
+            SaucesToAdd
+                .Enqueue(PartSauce.StrawberryJam);
+
+            SaucesToAdd
+                .Enqueue(PartSauce.DijonMustard);
+
+            
             IngredientsAllowed = new List<PartIngredient>
             {
                 PartIngredient.WhiteBread, PartIngredient.Ham, PartIngredient.SwissCheese

@@ -19,6 +19,8 @@
 
         public PartIngredient Ingredient { get; set; }
 
+        public PartSauce Sauce { get; set;}
+
         #endregion
     }
 }

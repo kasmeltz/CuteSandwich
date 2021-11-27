@@ -24,22 +24,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                         DesiredShape = part.DesiredShape
                     });
             }
-        }
-
-        public SandwichOrder(params PartIngredient[] ingredients)        
-        {
-            Parts = new List<SandwichPart>(ingredients.Length);
-            foreach(var ingredient in ingredients)
-            {
-                Parts
-                    .Add(new SandwichPart
-                    {
-                        Ingredient = ingredient,
-                        ResultShape = -1,
-                        DesiredShape = 0
-                    });
-            }
-        }
+        }        
 
         #endregion
 
