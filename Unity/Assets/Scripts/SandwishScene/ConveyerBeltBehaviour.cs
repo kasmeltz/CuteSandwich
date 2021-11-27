@@ -72,7 +72,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                     .Parts
                     .Add(part);
 
-                var part = new SandwichPart
+                part = new SandwichPart
                 {
                     Ingredient = PartIngredient.WhiteBread,
                     DesiredShape = PartShape.Heart,
