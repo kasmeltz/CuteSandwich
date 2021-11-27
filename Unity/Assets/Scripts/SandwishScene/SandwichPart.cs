@@ -2,10 +2,23 @@
 {
     public class SandwichPart
     {
-        public PartShape DesiredShape { get; set; }
+        #region Constructor
 
-        public PartShape ResultShape { get; set; }
+        public SandwichPart()
+        {
+            ResultShape = -1;
+        }
+
+        #endregion
+
+        #region Members
+
+        public int DesiredShape { get; set; }
+
+        public int ResultShape { get; set; }
 
         public PartIngredient Ingredient { get; set; }
+
+        #endregion
     }
 }

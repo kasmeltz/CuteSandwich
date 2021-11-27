@@ -14,13 +14,16 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         public float PartMoveSpeed = 200;
         public float PartCreatePoint = -200;
         public Image ShapeImage;
+        public int MaxShapeIndex = 4;
+
+        public SandwichOrderPanelBehaviour OrderPanelPrefab;
 
         public SandwichPartBehaviour SandwichPartPrefab;
         
         public RectTransform OrderContainer;
         public RectTransform CreatedParts;
 
-        protected PartShape SelectedShape { get; set; }
+        protected int SelectedShapeIndex { get; set; }
 
         public List<SandwichPart> PartsToCreate { get; set; }
 
@@ -40,12 +43,48 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
             for(int i = 0;i < orderCount;i++)
             {
+                var orderPanel = Instantiate(OrderPanelPrefab);
+
                 var order = new SandwichOrder();
 
-                CreateOrderPart(order, PartIngredient.WhiteBread, PartShape.Heart);
-                CreateOrderPart(order, PartIngredient.Mozzarella, PartShape.Heart);
-                CreateOrderPart(order, PartIngredient.HamPlain, PartShape.Heart);
-                CreateOrderPart(order, PartIngredient.WhiteBread, PartShape.Heart);
+                order
+                    .Parts
+                    .Add(new SandwichPart
+                    {
+                        Ingredient = PartIngredient.WhiteBread,
+                        DesiredShape = Random.Range(0, MaxShapeIndex)
+                    });
+
+                order
+                    .Parts
+                    .Add(new SandwichPart
+                    {
+                        Ingredient = PartIngredient.Mozzarella,
+                        DesiredShape = Random.Range(0, MaxShapeIndex)
+                    });
+
+                order
+                    .Parts
+                    .Add(new SandwichPart
+                    {
+                        Ingredient = PartIngredient.HamPlain,
+                        DesiredShape = Random.Range(0, MaxShapeIndex)
+                    });
+
+                order
+                   .Parts
+                   .Add(new SandwichPart
+                   {
+                       Ingredient = PartIngredient.WhiteBread,
+                       DesiredShape = Random.Range(0, MaxShapeIndex)
+                   });
+
+                orderPanel
+                    .SetSandwichOrder(order);
+
+                orderPanel
+                    .transform
+                    .SetParent(OrderContainer);
 
                 SandwichOrders
                     .Add(order);
@@ -63,53 +102,33 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
         public void RotateShape(int direction)
         {
-            int currentShape = (int)SelectedShape;
-            currentShape += direction;
-            if (currentShape < 1)
+            SelectedShapeIndex += direction;
+            if (SelectedShapeIndex < 0)
             {
-                currentShape = 2;
+                SelectedShapeIndex = MaxShapeIndex - 1;
             }
-            else if (currentShape > 2)
+            else if (SelectedShapeIndex >= MaxShapeIndex)
             {
-                currentShape = 1;
+                SelectedShapeIndex = 0;
             }
 
-            SetSelectedShape((PartShape)currentShape);
+            SetSelectedShape(SelectedShapeIndex);
         }
 
-        public void SetSelectedShape(PartShape shape)
+        public void SetSelectedShape(int shapeIndex)
         {
-            SelectedShape = shape;
-            ShapeImage.sprite = Resources
-                .Load<Sprite>($"Images/Shapes/{SelectedShape}");
+            SelectedShapeIndex = shapeIndex;
+
+            var sprites = Resources
+                .LoadAll<Sprite>("Images/Shapes/all_shapes");
+
+            ShapeImage.sprite = sprites[shapeIndex];
         }
 
         #endregion
 
         #region Protected Methods
-
-        protected void CreateOrderPart(SandwichOrder order, PartIngredient ingredient, PartShape shape)
-        {
-            var sandwichPart = new SandwichPart
-            {
-                Ingredient = ingredient,
-                DesiredShape = shape,
-                ResultShape = PartShape.None
-            };
-
-            var sandwichPartBehaviour = Instantiate(SandwichPartPrefab);
-            sandwichPartBehaviour
-                .SetSandwichPart(sandwichPart, false);
-
-            sandwichPartBehaviour
-                .transform
-                .SetParent(OrderContainer);
-
-            order
-                .Parts
-                .Add(sandwichPart);
-        }
-
+      
         protected void MakeNewParts()
         {
             if (!PartsToCreate.Any())
@@ -177,7 +196,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                         if (!part.PartImage.maskable)
                         {
                             part
-                                .SetShape(SelectedShape);
+                                .SetShape(SelectedShapeIndex);
                         }
                     }
 
@@ -232,7 +251,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             RequestedParts = new List<SandwichPartBehaviour>();
             SandwichParts = new List<SandwichPartBehaviour>();
 
-            SetSelectedShape(PartShape.Heart);
+            SetSelectedShape(0);
 
             MakeOrders();
         }

@@ -48,26 +48,19 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             }
         }
 
-        public void SetShape(PartShape shape)
+        public void SetShape(int shapeIndex)
         {
-            if (shape == PartShape.None)
+            if (shapeIndex < 0)
             {
                 PartImage.maskable = false;
             }
             else
             {
-                var maskSprite = Resources
-                               .Load<Sprite>($"Images/Shapes/{shape}");
+                var sprites = Resources
+                    .LoadAll<Sprite>("Images/Shapes/all_shapes");
 
-                if (maskSprite == null)
-                {
-                    Debug.LogError($"CANT FIND IMAGE FOR SHAPE {shape}");
-                }
-                else
-                {
-                    PartMask.sprite = maskSprite;
-                    PartImage.maskable = true;
-                }
+                PartMask.sprite = sprites[shapeIndex];
+                PartImage.maskable = true;
             }
         }
 
