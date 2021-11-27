@@ -37,6 +37,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
         public List<SandwichPartBehaviour> SandwichParts { get; set; }
 
+        public HashSet<PartIngredient> IngredientsAllowed { get; set; }        
+
         #endregion
 
         #region Public Methods
@@ -47,39 +49,13 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             {
                 var orderPanel = Instantiate(OrderPanelPrefab);
 
-                var order = new SandwichOrder();
+                var order = SandwichRecipe
+                    .GetRandomOrder(IngredientsAllowed);
 
-                order
-                    .Parts
-                    .Add(new SandwichPart
-                    {
-                        Ingredient = PartIngredient.WhiteBread,
-                        DesiredShape = Random.Range(0, MaxShapeIndex)
-                    });
-
-                order
-                    .Parts
-                    .Add(new SandwichPart
-                    {
-                        Ingredient = PartIngredient.Mozzarella,
-                        DesiredShape = Random.Range(0, MaxShapeIndex)
-                    });
-
-                order
-                    .Parts
-                    .Add(new SandwichPart
-                    {
-                        Ingredient = PartIngredient.HamPlain,
-                        DesiredShape = Random.Range(0, MaxShapeIndex)
-                    });
-
-                order
-                   .Parts
-                   .Add(new SandwichPart
-                   {
-                       Ingredient = PartIngredient.WhiteBread,
-                       DesiredShape = Random.Range(0, MaxShapeIndex)
-                   });
+                foreach(var part in order.Parts)
+                {
+                    part.DesiredShape = Random.Range(0, MaxShapeIndex);
+                }
 
                 orderPanel
                     .SetSandwichOrder(order);
@@ -226,6 +202,14 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
         protected void CheckSandwichParts()
         {
+            List<SandwichPart> availableParts = new List<SandwichPart>();
+
+
+            foreach(var order in SandwichOrders)
+            {
+                
+            }
+
             Score += 100;
             ScoreText.text = $"{Mathf.RoundToInt(Score)}";
 
@@ -299,6 +283,12 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 .Awake();
 
             Score = 0;
+
+            IngredientsAllowed = new HashSet<PartIngredient>
+            {
+                PartIngredient.WhiteBread, PartIngredient.HamPlain, PartIngredient.Mozzarella
+            };
+
             PartsToCreate = new List<SandwichPart>();
             SandwichOrders = new List<SandwichOrder>();
             RequestedParts = new List<SandwichPartBehaviour>();

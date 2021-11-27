@@ -611,7 +611,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9219b248fdff33a4f925a6b0ba366430, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ScoreText: {fileID: 0}
+  ScoreText: {fileID: 1626850386}
   PartMoveSpeed: 100
   PartCreatePoint: -100
   ShapeImage: {fileID: 1339527360}
@@ -925,7 +925,7 @@ GameObject:
   - component: {fileID: 1626850387}
   - component: {fileID: 1626850386}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: ScoreText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -4,6 +4,8 @@
     {
         WhiteBread,
         Mozzarella,
-        HamPlain
+        HamPlain,
+        Tomato,
+        Lettuce
     }
 }
