@@ -2,6 +2,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 {
     using System.Collections.Generic;
     using System.Linq;
+    using TMPro;
     using UnityEngine;
     using UnityEngine.UI;
 
@@ -11,11 +12,13 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
     {
         #region Members
 
-        public float PartMoveSpeed = 200;
-        public float PartCreatePoint = -200;
+        public TMP_Text ScoreText;
+        public float PartMoveSpeed = 100;
+        public float PartCreatePoint = -100;
         public Image ShapeImage;
         public int MaxShapeIndex = 4;
         public int OrdersToCreate = 1;
+        protected float Score;
 
         public SandwichOrderPanelBehaviour OrderPanelPrefab;
 
@@ -214,10 +217,60 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
             if (!PartsToCreate.Any())
             {
-                if (lastPart.PartMask.rectTransform.anchoredPosition.x >= 700)
+                if (lastPart.transform.parent == CreatedParts)
                 {
-                    Debug.Log("CHECK SANDWICH PARTS!");
+                    CheckSandwichParts();
                 }
+            }
+        }
+
+        protected void CheckSandwichParts()
+        {
+            Score += 100;
+            ScoreText.text = $"{Mathf.RoundToInt(Score)}";
+
+            NextLevel();
+        }
+
+        protected void NextLevel()
+        {
+            Reset();
+            SetSelectedShape(0);
+            MakeOrders();
+        }
+
+        protected void Reset()
+        {
+            foreach(var part in SandwichParts)
+            {
+                MegaDestroy(part.gameObject);
+            }
+
+            SandwichParts
+                .Clear();
+            
+            foreach (var part in RequestedParts)
+            {
+                MegaDestroy(part.gameObject);
+            }
+
+            RequestedParts
+                .Clear();
+
+            SandwichOrders
+                .Clear();
+
+            PartsToCreate
+                .Clear();
+            
+            foreach(GameObject item in OrderContainer)
+            {
+                MegaDestroy(item);
+            }
+
+            foreach (GameObject item in CreatedParts)
+            {
+                MegaDestroy(item);
             }
         }
 
@@ -244,7 +297,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         {
             base
                 .Awake();
-            
+
+            Score = 0;
             PartsToCreate = new List<SandwichPart>();
             SandwichOrders = new List<SandwichOrder>();
             RequestedParts = new List<SandwichPartBehaviour>();
