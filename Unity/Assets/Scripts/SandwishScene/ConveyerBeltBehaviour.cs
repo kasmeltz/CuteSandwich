@@ -600,7 +600,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             SandwichSceneState = SandwichSceneState.MakingSandwiches;
 
             SetLevel(0);
-            SetScore(1.5f);
+            SetScore(2);
 
             BreadTypesAvailable = new List<PartIngredient>
             {
