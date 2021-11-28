@@ -97,6 +97,9 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 }
 
                 orderPanel
+                    .RandomizeFace();
+
+                orderPanel
                     .SetSandwichOrder(order);
 
                 orderPanel
