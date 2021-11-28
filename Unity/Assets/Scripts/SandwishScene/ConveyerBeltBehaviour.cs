@@ -29,6 +29,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         
         public RectTransform OrderContainer;
         public RectTransform CreatedParts;
+        public RectTransform GameOverPanel;
 
         public int SelectedShapeIndex { get; set; }
 
@@ -306,13 +307,20 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         public void SetOrderTime(float time)
         {
             OrderTime = time;
-            OrderTimeText.text = $"{OrderTime:0.0}";
 
             if (OrderTime < 0)
             {
                 OrderTime = 0;
-                GameOver();
+
+                if (SandwichSceneState == SandwichSceneState.MakingSandwiches)
+                {
+                    GameOver();
+                }
             }
+
+            OrderTimeText.text = $"{OrderTime:0.0}";
+
+          
         }
 
         public void SetLevel(int level)
@@ -326,7 +334,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
             PartMoveSpeed = BasePartMoveSpeed + (PartMoveSpeedPerLevel * Level);
 
-            SetOrderTime(90);            
+            SetOrderTime(60);            
         }
 
         #endregion
@@ -336,6 +344,9 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         protected void GameOver()
         {
             SandwichSceneState = SandwichSceneState.GameOver;
+            GameOverPanel
+                .gameObject
+                .SetActive(true);
         }
 
         protected void MoveConveyer()
@@ -554,7 +565,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
         {
             if (ScoreToAdd > 0)
             {
-                var amount = Time.deltaTime * 20;
+                var amount = Time.deltaTime * 10;
                 if (amount > ScoreToAdd)
                 {
                     amount = ScoreToAdd;
@@ -563,7 +574,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                 ScoreToAdd -= amount;
                 SetScore(Score + amount);
 
-                SetOrderTime(OrderTime - (Time.deltaTime * 45));
+                SetOrderTime(OrderTime - (Time.deltaTime * 90));
 
                 if (ScoreToAdd <= 0)
                 {
@@ -589,7 +600,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             SandwichSceneState = SandwichSceneState.MakingSandwiches;
 
             SetLevel(0);
-            SetScore(5);
+            SetScore(1.5f);
 
             BreadTypesAvailable = new List<PartIngredient>
             {

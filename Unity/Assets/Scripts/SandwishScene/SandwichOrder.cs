@@ -41,7 +41,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
 
                 score += Parts.Count * 0.4f;
                 score += Parts.Count(o => o.Sauce != PartSauce.None) * 0.4f;
-                score += 4;
+                score += 1.5f;
 
                 return score;
 
