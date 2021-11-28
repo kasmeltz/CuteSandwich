@@ -14,7 +14,7 @@
                 Parts = new List<SandwichPart>
                 {
                     new SandwichPart(PartIngredient.WhiteBread),
-                    new SandwichPart(PartIngredient.Ham, PartSauce.Mayonnaise),
+                    new SandwichPart(PartIngredient.Ham),
                     new SandwichPart(PartIngredient.SwissCheese),
                     new SandwichPart(PartIngredient.WhiteBread)                    
                 }
