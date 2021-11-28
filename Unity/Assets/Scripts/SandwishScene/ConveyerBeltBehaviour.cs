@@ -224,7 +224,8 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
             SandwichPartBehaviour foundPart = null;
             foreach(var part in SandwichParts)
             {
-                if (part.RectTransform.anchoredPosition.x < 480 ||
+                if (part.transform.parent == CreatedParts ||
+                    part.RectTransform.anchoredPosition.x < 480 ||
                     part.RectTransform.anchoredPosition.x > 620)
                 {
                     continue;
