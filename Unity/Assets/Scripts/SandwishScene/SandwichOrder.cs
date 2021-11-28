@@ -21,6 +21,7 @@ namespace HairyNerd.CuteSandwich.Unity.Behaviours.SandwichScene
                     .Add(new SandwichPart
                     {
                         Ingredient = part.Ingredient,
+                        Sauce = part.Sauce,
                         Shape = part.Shape
                     });
             }
